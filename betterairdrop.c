@@ -264,6 +264,7 @@ class BetterAirdrop {
         float distance = direction.Length();
 
         vector direction2 = Vector(spawn_pos[0], 0, spawn_pos[1])-Vector(drop_pos[0], 0, drop_pos[1]);
+        plane.SetOrientation(Vector(direction2.VectorToAngles()[0], 0, 0)); // thx Dr. Zed (im lazy, i know)
 
         GetGame().AdminLog("<BetterAirdrop> launch ("+active_drop.name+")"); // Used for CFTools - OmegaSC
         GetGame().AdminLog("<BetterAirdrop> INBOUND " + active_drop.name + " AT [X: "+active_drop.x+"; Y: "+active_drop.y+"] START [X: "+spawn_pos[0]+"; Y: "+spawn_pos[1]+"] DISTANCE2TARGET: "+ distance + "; PLANEANGLE: "+ fixed_angle +";");
@@ -300,6 +301,7 @@ class BetterAirdrop {
         return loot.GetRandomElement();
     }
 
+	TStringArray WorkingZombieClasses() { // Taken from community offline mode (somewhere is one infected without texture though)
 		return {"ZmbM_HermitSkinny_Base","ZmbM_HermitSkinny_Beige","ZmbM_HermitSkinny_Black","ZmbM_HermitSkinny_Green",
 				"ZmbM_HermitSkinny_Red","ZmbM_FarmerFat_Base","ZmbM_FarmerFat_Beige","ZmbM_FarmerFat_Blue","ZmbM_FarmerFat_Brown",
 				"ZmbM_FarmerFat_Green","ZmbF_CitizenANormal_Base","ZmbF_CitizenANormal_Beige","ZmbF_CitizenANormal_Brown",

@@ -1,5 +1,5 @@
   /*
-    Place in init.c  
+    Place in init.c -> CustomMission
   */
   
   bool verify_admins = false; // true=verify presence of BI UID in admin list

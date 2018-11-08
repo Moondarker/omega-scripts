@@ -19,7 +19,7 @@
 		GetGame().RPCSingleParam(player, ERPCs.RPC_USER_ACTION_MESSAGE, param, true, player.GetIdentity());
 	}
 
-	bool IsPlayer(string name) {
+	bool IsPlayer(string name) { 
 		PlayerBase p;
 		array<Man> players = new array<Man>; GetGame().GetPlayers(players);
 		for ( int i = 0; i < players.Count(); ++i ) {
@@ -47,8 +47,8 @@
 		if(eventTypeId != ChatMessageEventTypeID) return; // Is chat message
 		ChatMessageEventParams chat_params = ChatMessageEventParams.Cast( params );
 		if(chat_params.param1 != 0 || chat_params.param2 == "") return; 
-		if(!IsPlayer(chat_params.param2)) return;
 		player = GetPlayer(chat_params.param2);
+		if(player == NULL) return;
 		if(verify_admins && !IsPlayerAnAdmin(player)) { GetGame().AdminLog("[ADMCMD] (Unauthorized) " + player.GetIdentity().GetName() +" ("+player.GetIdentity().GetPlainId()+", "+player.GetIdentity().GetId()+") tried to execute "+ chat_params.param3); return; }
 		string message = chat_params.param3, prefix, param0, command;
 		TStringArray tokens = new TStringArray;
@@ -67,10 +67,10 @@
 
 			case "goto": {
 				if(count != 2) { SendMessageToPlayer(player, "/goto [player]"); return; }
-				if(!IsPlayer(tokens[1])) {
+				temp_player = GetPlayer(tokens[1]);
+				if(temp_player == NULL) {
 					SendMessageToPlayer(player, "[Teleport] Can't find player called: '"+tokens[1]+"'");
 				} else {
-					temp_player = GetPlayer(tokens[1]);
 					player.SetPosition(temp_player.GetPosition());
 					SendMessageToPlayer(player, "[Teleport] You teleported to " + temp_player.GetIdentity().GetName());
 				}
@@ -80,10 +80,10 @@
 			case "allgoto": {
 				PlayerBase allgoto_target;
 				if(count != 2) { SendMessageToPlayer(player, "/allgoto [player]"); return; }
-				if(!IsPlayer(tokens[1])) {
+				allgoto_target = GetPlayer(tokens[1]);
+				if(allgoto_target == NULL) {
 					SendMessageToPlayer(player, "[Teleport] Can't find player called: '"+tokens[1]+"'");
 				} else {
-					allgoto_target = GetPlayer(tokens[1]);
 					SendMessageToPlayer(player, "[Teleport] You teleported everyone to your location");
 					for (i = 0; i < players.Count(); i++) {
 						temp_player = players.Get(i);
@@ -96,10 +96,10 @@
 
 			case "here": {
 				if(count != 2) { SendMessageToPlayer(player, "/here [player]"); return; }
-				if(!IsPlayer(tokens[1])) {
+				temp_player = GetPlayer(tokens[1]);
+				if(temp_player == NULL) {
 					SendMessageToPlayer(player, "[Teleport] Can't find player called: '"+tokens[1]+"'");
 				} else {
-					temp_player = GetPlayer(tokens[1]);
 					temp_player.SetPosition(player.GetPosition());
 					SendMessageToPlayer(temp_player, "[Teleport] You have been teleported to admin " + player.GetIdentity().GetName());
 					SendMessageToPlayer(player, "[Teleport] You teleported " + temp_player.GetIdentity().GetName() + " to your location");
@@ -126,10 +126,10 @@
 
 			case "kill": {
 				if(count == 2) {
-					if(!IsPlayer(tokens[1])) {
+					temp_player = GetPlayer(tokens[1]);
+					if(temp_player == NULL) {
 						SendMessageToPlayer(player, "[Kill] Can't find player called: '"+tokens[1]+"'");
 					} else {
-						temp_player = GetPlayer(tokens[1]);
 						temp_player.SetHealth(0);
 						SendMessageToPlayer(player, "[Kill] You killed " + temp_player.GetIdentity().GetName());
 					}
@@ -153,10 +153,10 @@
 			case "heal": {
 				PlayerBase heal_target;
 				if(count == 2) {
-					if(!IsPlayer(tokens[1])) {
+					heal_target = GetPlayer(tokens[1]);
+					if(heal_target == NULL) {
 						SendMessageToPlayer(player, "[Heal] Can't find player called: '"+tokens[1]+"'");
 					} else {
-						heal_target = GetPlayer(tokens[1]);
 						SendMessageToPlayer(player, "[Heal] You healed " + heal_target.GetIdentity().GetName());
 					}
 				} else {
@@ -175,19 +175,19 @@
 
 			case "offroad": {
 				SendMessageToPlayer(player, "[Offroad] Vehicled spawned");
-        EntityAI v;
-        v = GetGame().CreateObject( "OffroadHatchback", player.GetPosition() + "1.5 0 1.5");		    
-        v.GetInventory().CreateAttachment("SparkPlug");
-        v.GetInventory().CreateAttachment("EngineBelt");
-        v.GetInventory().CreateAttachment("CarBattery");
-        v.GetInventory().CreateAttachment("HatchbackHood");
-        v.GetInventory().CreateAttachment("HatchbackTrunk");
-        v.GetInventory().CreateAttachment("HatchbackDoors_CoDriver");
-        v.GetInventory().CreateAttachment("HatchbackWheel");
-        v.GetInventory().CreateAttachment("HatchbackWheel");
-        v.GetInventory().CreateAttachment("HatchbackWheel");
-        v.GetInventory().CreateAttachment("HatchbackWheel");
-        v.GetInventory().CreateAttachment("HatchbackWheel"); // spare
+				EntityAI v;
+				v = GetGame().CreateObject( "OffroadHatchback", player.GetPosition() + "1.5 0 1.5");		    
+				v.GetInventory().CreateAttachment("SparkPlug");
+				v.GetInventory().CreateAttachment("EngineBelt");
+				v.GetInventory().CreateAttachment("CarBattery");
+				v.GetInventory().CreateAttachment("HatchbackHood");
+				v.GetInventory().CreateAttachment("HatchbackTrunk");
+				v.GetInventory().CreateAttachment("HatchbackDoors_CoDriver");
+				v.GetInventory().CreateAttachment("HatchbackWheel");
+				v.GetInventory().CreateAttachment("HatchbackWheel");
+				v.GetInventory().CreateAttachment("HatchbackWheel");
+				v.GetInventory().CreateAttachment("HatchbackWheel");
+				v.GetInventory().CreateAttachment("HatchbackWheel"); // spare
 				break;
 			}
 			

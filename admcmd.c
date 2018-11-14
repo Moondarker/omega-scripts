@@ -190,6 +190,32 @@
 				v.GetInventory().CreateAttachment("HatchbackWheel"); // spare
 				break;
 			}
+
+			case "refuel": {
+				ref array<Object> nearest_objects = new array<Object>;
+				ref array<CargoBase> proxy_cargos = new array<CargoBase>;
+				Car toBeFilled;
+				vector position = player.GetPosition();
+				GetGame().GetObjectsAtPosition ( position, 10, nearest_objects, proxy_cargos );
+		
+				for (i = 0; i < nearest_objects.Count(); i++) {
+					if (nearest_objects[i].IsKindOf("CarScript")) {
+						SendMessageToPlayer(player, "[Refuel] Found car: '"+nearest_objects[i]+"'");
+						toBeFilled = Car.Cast(nearest_objects[i]);
+						float fuelReq = toBeFilled.GetFluidCapacity( CarFluid.FUEL ) - (toBeFilled.GetFluidCapacity( CarFluid.FUEL ) * toBeFilled.GetFluidFraction( CarFluid.FUEL ));
+						float oilReq = toBeFilled.GetFluidCapacity( CarFluid.OIL ) - (toBeFilled.GetFluidCapacity( CarFluid.OIL ) * toBeFilled.GetFluidFraction( CarFluid.OIL ));
+						float coolantReq = toBeFilled.GetFluidCapacity( CarFluid.COOLANT ) - (toBeFilled.GetFluidCapacity( CarFluid.COOLANT ) * toBeFilled.GetFluidFraction( CarFluid.COOLANT ));
+						float brakeReq = toBeFilled.GetFluidCapacity( CarFluid.BRAKE ) - (toBeFilled.GetFluidCapacity( CarFluid.BRAKE ) * toBeFilled.GetFluidFraction( CarFluid.BRAKE ));
+						toBeFilled.Fill( CarFluid.FUEL, fuelReq );
+						toBeFilled.Fill( CarFluid.OIL, oilReq );
+						toBeFilled.Fill( CarFluid.COOLANT, coolantReq );
+						toBeFilled.Fill( CarFluid.BRAKE, brakeReq );
+						SendMessageToPlayer(player, "[Refuel] "+fuelReq+"L added, all fluids maxed");
+					}
+				}
+				
+				break;
+			}
 			
 			default: {
 				SendMessageToPlayer(player, "Unknown command: " + command);

@@ -2,14 +2,14 @@
     Place in init.c -> CustomMission
   */
   
-  bool verify_admins = false; // true=verify presence of BI UID in admin list
+  	bool verify_admins = false; // true=verify presence of BI UID in admin list
 	string cmd_prefix = "/"; // Must be special character
-	ref TStringArray admins = {}; // Add your BI UID
+	ref TStringArray admins = {}; // Add your BI UID or SteamID
 
 	bool IsPlayerAnAdmin(PlayerBase player) {
 		bool found = false;
 		for ( int i = 0; i < admins.Count(); ++i ) {
-			if(player.GetIdentity().GetId() == admins[i]) { found=true; break; }
+			if(player.GetIdentity().GetId() == admins[i] || player.GetIdentity().GetPlainId() == admins[i]) { found=true; break; }
 		}
 		return found;
 	}

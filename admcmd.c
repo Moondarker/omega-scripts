@@ -75,8 +75,8 @@
 
 			case "topos": {
 				if (count < 3) { SendMessageToPlayer(player, "/topos [x] [y] (player)"); return; }
-				EntityAI anchor;
-				vector reqpos = (tokens[1]+" 0 "+tokens[2]).ToVector();
+				float ATL_Z = GetGame().SurfaceY(tokens[1].ToFloat(), tokens[2].ToFloat());
+				vector reqpos = Vector(tokens[1].ToFloat(), ATL_Z, tokens[2].ToFloat());
 				temp_player = player;
 				if (count == 4) { 
 					temp_player = GetPlayer(tokens[3]); 
@@ -86,10 +86,8 @@
 						SendMessageToPlayer(temp_player, "[Teleport] You've been teleported to " + reqpos + " by admin " + player.GetIdentity().GetName());
 					}
 				}
-				anchor = GetGame().CreateObject("Apple", reqpos, false, true ); //A dirty hack to get ATL pos
-				temp_player.SetPosition(anchor.GetPosition());
-				GetGame().ObjectDelete(anchor);
-				SendMessageToPlayer(player, "[Teleport] Target teleported to " + player.GetPosition());
+				temp_player.SetPosition(reqpos);
+				SendMessageToPlayer(player, "[Teleport] Target teleported to " + temp_player.GetPosition());
 				break;
 			}
 

@@ -65,6 +65,26 @@
 				break;
 			}
 
+			case "topos": {
+				if (count < 3) { SendMessageToPlayer(player, "/topos [x] [y] (player)"); return; }
+				EntityAI anchor;
+				vector reqpos = (tokens[1]+" 0 "+tokens[2]).ToVector();
+				temp_player = player;
+				if (count == 4) { 
+					temp_player = GetPlayer(tokens[3]); 
+					if (temp_player == NULL) {
+						SendMessageToPlayer(player, "[Teleport] Can't find player called: '"+tokens[3]+"'"); return;
+					} else {
+						SendMessageToPlayer(temp_player, "[Teleport] You've been teleported to " + reqpos + " by admin " + player.GetIdentity().GetName());
+					}
+				}
+				anchor = GetGame().CreateObject("Apple", reqpos, false, true ); //A dirty hack to get ATL pos
+				temp_player.SetPosition(anchor.GetPosition());
+				GetGame().ObjectDelete(anchor);
+				SendMessageToPlayer(player, "[Teleport] Target teleported to " + player.GetPosition());
+				break;
+			}
+
 			case "goto": {
 				if(count != 2) { SendMessageToPlayer(player, "/goto [player]"); return; }
 				temp_player = GetPlayer(tokens[1]);

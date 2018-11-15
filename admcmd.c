@@ -54,13 +54,13 @@
 		TStringArray tokens = new TStringArray;
 		message.Replace("` ", "&SPCESC!"); //Escape spaces before splitting
 		message.Split(" ", tokens); int count = tokens.Count();
-		
+
 		for ( i = 0; i < count; ++i ) {
 			message = tokens[i];
 			message.Replace("&SPCESC!", " "); //.Replace doesn't work directly on TStringArray elements for some reason :(
 			tokens[i] = message;
 		}
-		
+
 		param0 = tokens.Get(0);
 		param0.ParseStringEx(prefix); if(prefix != cmd_prefix) return;
 		param0.ParseStringEx(command);
@@ -245,7 +245,7 @@
 				
 				break;
 			}
-			
+
 			default: {
 				SendMessageToPlayer(player, "Unknown command: " + command);
 				break;

@@ -175,8 +175,11 @@
 
 			case "offroad": {
 				SendMessageToPlayer(player, "[Offroad] Vehicled spawned");
-				EntityAI v;
-				v = GetGame().CreateObject( "OffroadHatchback", player.GetPosition() + "1.5 0 1.5");		    
+				Car v;
+				float playerAngle = MiscGameplayFunctions.GetHeadingAngle(player);
+				vector posModifier = Vector(-(3 * Math.Sin(playerAngle)), 0, 3 * Math.Cos(playerAngle));
+				v = Car.Cast(GetGame().CreateObject( "OffroadHatchback", player.GetPosition() + posModifier));
+				
 				v.GetInventory().CreateAttachment("SparkPlug");
 				v.GetInventory().CreateAttachment("EngineBelt");
 				v.GetInventory().CreateAttachment("CarBattery");
